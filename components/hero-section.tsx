@@ -1,5 +1,5 @@
 import {
-  ArrowRight,
+
   Building2,
   MapPin,
   Search,
