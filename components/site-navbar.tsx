@@ -55,7 +55,7 @@ export function SiteNavbar() {
             />
 
             <Link
-              href="#"
+              href="/signin"
               className="text-sm font-medium text-violet-600 transition-colors hover:text-violet-500 dark:text-violet-400 dark:hover:text-violet-300"
             >
               Sign In
@@ -105,7 +105,7 @@ export function SiteNavbar() {
               <div className="my-2 h-px bg-foreground/10 dark:bg-white/10" />
 
               <Link
-                href="#"
+                href="/signin"
                 onClick={() => setOpen(false)}
                 className="rounded-lg px-3 py-2.5 text-sm font-medium text-violet-600 transition-colors hover:bg-violet-500/10 hover:text-violet-500 dark:text-violet-400 dark:hover:bg-white/10 dark:hover:text-violet-300"
               >
