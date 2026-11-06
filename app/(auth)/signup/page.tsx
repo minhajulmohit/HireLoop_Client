@@ -7,7 +7,11 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+
 import { FcGoogle } from "react-icons/fc"
+
+import { FaUsersRays, FaUserShield } from "react-icons/fa6"
+import { ImUserTie } from "react-icons/im"
 
 const inputClasses =
   "w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white outline-none placeholder:text-white/30 focus:border-violet-500 focus:ring-3 focus:ring-violet-500/30"
@@ -17,6 +21,25 @@ export default function SignUpPage() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [role, setRole] = useState("")
+
+  const roles = [
+    {
+      value: "seeker",
+      label: "Job Seeker",
+      icon: <FaUsersRays className="h-5 w-5" />,
+    },
+    {
+      value: "recruiter",
+      label: "Recruiter",
+      icon: <ImUserTie className="h-5 w-5" />,
+    },
+    {
+      value: "admin",
+      label: "Admin",
+      icon: <FaUserShield className="h-5 w-5" />,
+    },
+  ]
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -24,6 +47,7 @@ export default function SignUpPage() {
       name: name as string,
       email: email as string,
       password: password as string,
+      role: role as string,
     })
 
     if (data) {
@@ -61,6 +85,32 @@ export default function SignUpPage() {
         </h1>
 
         <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4">
+          {/* Role selector — ekta select korte hobe */}
+          <div className="flex flex-col gap-1.5">
+            <span className="text-xs font-medium text-white/60">
+              I want to join as
+            </span>
+            <div className="grid grid-cols-3 gap-2">
+              {roles.map((r) => (
+                <label key={r.value} className="cursor-pointer">
+                  <input
+                    type="radio"
+                    name="role"
+                    value={r.value}
+                    checked={role === r.value}
+                    onChange={(e) => setRole(e.target.value)}
+                    className="peer sr-only"
+                    required
+                  />
+                  <div className="flex min-h-20 flex-col items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-2 py-2.5 text-center text-xs font-medium text-white/60 transition-colors peer-checked:border-violet-500 peer-checked:bg-violet-500/15 peer-checked:text-white">
+                    {r.icon}
+                    <span>{r.label}</span>
+                  </div>
+                </label>
+              ))}
+            </div>
+          </div>
+
           <div className="flex flex-col gap-1.5">
             <label htmlFor="name" className="text-xs font-medium text-white/60">
               Full name
