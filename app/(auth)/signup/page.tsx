@@ -16,6 +16,14 @@ import { ImUserTie } from "react-icons/im"
 const inputClasses =
   "w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white outline-none placeholder:text-white/30 focus:border-violet-500 focus:ring-3 focus:ring-violet-500/30"
 
+// Signup form data — server e (better-auth e) je data jacche
+type SignUpFormData = {
+  name: string
+  email: string
+  password: string
+  role: string
+}
+
 export default function SignUpPage() {
   const router = useRouter()
   const [name, setName] = useState("")
@@ -43,12 +51,15 @@ export default function SignUpPage() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    const { data, error } = await authClient.signUp.email({
-      name: name as string,
-      email: email as string,
-      password: password as string,
-      role: role as string,
-    })
+
+    const formData: SignUpFormData = {
+      name: name,
+      email: email,
+      password: password,
+      role: role,
+    }
+
+    const { data, error } = await authClient.signUp.email(formData)
 
     if (data) {
       toast.add({ title: "Account created successfully!", type: "success" })
