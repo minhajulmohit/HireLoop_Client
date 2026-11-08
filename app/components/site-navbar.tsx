@@ -11,18 +11,17 @@ import { toast } from "@/components/ui/toast"
 import { signOut, useSession } from "@/lib/auth-client"
 import { useRouter } from "next/navigation"
 
-const navLinks = [
-  { label: "Browse Jobs", href: "#" },
-  { label: "Company", href: "#" },
-  { label: "Pricing", href: "#" },
-]
-
 export function SiteNavbar() {
   const [open, setOpen] = useState(false)
   const router = useRouter()
   const { data: session } = useSession()
 
-
+  const navLinks = [
+    { label: "Browse Jobs", href: "#" },
+    { label: "Company", href: "#" },
+    { label: "Pricing", href: "#" },
+    { label: "Dashboard", href: `/dashboard/${session?.user?.role}` },
+  ]
 
   const handleSignOut = async () => {
     const { error } = await signOut()
