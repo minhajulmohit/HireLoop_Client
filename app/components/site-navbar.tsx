@@ -7,6 +7,9 @@ import { useTheme } from "next-themes"
 import { Menu, Moon, Sun, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { toast } from "@/components/ui/toast"
+import { signOut, useSession } from "@/lib/auth-client"
+import { useRouter } from "next/navigation"
 
 const navLinks = [
   { label: "Browse Jobs", href: "#" },
@@ -16,6 +19,25 @@ const navLinks = [
 
 export function SiteNavbar() {
   const [open, setOpen] = useState(false)
+  const router = useRouter()
+  const { data: session } = useSession()
+
+
+
+  const handleSignOut = async () => {
+    const { error } = await signOut()
+
+    if (error) {
+      toast.add({
+        title: error.message ?? "Could not sign out. Please try again.",
+        type: "error",
+      })
+      return
+    }
+
+    setOpen(false)
+    router.replace("/")
+  }
 
   return (
     <header className="sticky top-0 z-50 px-4 pt-4">
@@ -54,19 +76,37 @@ export function SiteNavbar() {
               className="h-5 w-px bg-foreground/15 dark:bg-white/15"
             />
 
-            <Link
-              href="/signin"
-              className="text-sm font-medium text-violet-600 transition-colors hover:text-violet-500 dark:text-violet-400 dark:hover:text-violet-300"
-            >
-              Sign In
-            </Link>
+            {session?.user ? (
+              <>
+                <span>Welcome {session?.user.name}! </span>
+                <Button
+                  size="lg"
+                  onClick={handleSignOut}
+                  className="mt-1 h-10 border-transparent bg-violet-500 text-white hover:bg-violet-600 dark:bg-violet-500 dark:hover:bg-violet-400"
+                >
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/signin"
+                  onClick={() => setOpen(false)}
+                  className="rounded-lg px-3 py-2.5 text-sm font-medium text-violet-600 transition-colors hover:bg-violet-500/10 hover:text-violet-500 dark:text-violet-400 dark:hover:bg-white/10 dark:hover:text-violet-300"
+                >
+                  Sign In
+                </Link>
 
-            <Button
-              size="lg"
-              className="h-10 border-transparent bg-violet-500 px-5 text-white hover:bg-violet-600 dark:bg-violet-500 dark:hover:bg-violet-400"
-            >
-              Get Started
-            </Button>
+                <Button
+                  size="lg"
+                  render={<Link href="/signup" />}
+                  onClick={() => setOpen(false)}
+                  className="mt-1 h-10 border-transparent bg-violet-500 text-white hover:bg-violet-600 dark:bg-violet-500 dark:hover:bg-violet-400"
+                >
+                  Get Started
+                </Button>
+              </>
+            )}
 
             {/* Theme toggle */}
             <ThemeToggle />
@@ -104,21 +144,37 @@ export function SiteNavbar() {
 
               <div className="my-2 h-px bg-foreground/10 dark:bg-white/10" />
 
-              <Link
-                href="/signin"
-                onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-2.5 text-sm font-medium text-violet-600 transition-colors hover:bg-violet-500/10 hover:text-violet-500 dark:text-violet-400 dark:hover:bg-white/10 dark:hover:text-violet-300"
-              >
-                Sign In
-              </Link>
+              {session?.user ? (
+                <>
+                  <span>Welcome {session?.user.name}</span>
+                  <Button
+                    size="lg"
+                    onClick={handleSignOut}
+                    className="mt-1 h-10 border-transparent bg-violet-500 text-white hover:bg-violet-600 dark:bg-violet-500 dark:hover:bg-violet-400"
+                  >
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/signin"
+                    onClick={() => setOpen(false)}
+                    className="rounded-lg px-3 py-2.5 text-sm font-medium text-violet-600 transition-colors hover:bg-violet-500/10 hover:text-violet-500 dark:text-violet-400 dark:hover:bg-white/10 dark:hover:text-violet-300"
+                  >
+                    Sign In
+                  </Link>
 
-              <Button
-                size="lg"
-                onClick={() => setOpen(false)}
-                className="mt-1 h-10 border-transparent bg-violet-500 text-white hover:bg-violet-600 dark:bg-violet-500 dark:hover:bg-violet-400"
-              >
-                Get Started
-              </Button>
+                  <Button
+                    size="lg"
+                    render={<Link href="/signup" />}
+                    onClick={() => setOpen(false)}
+                    className="mt-1 h-10 border-transparent bg-violet-500 text-white hover:bg-violet-600 dark:bg-violet-500 dark:hover:bg-violet-400"
+                  >
+                    Get Started
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         )}

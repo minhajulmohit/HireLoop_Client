@@ -52,7 +52,8 @@ export default function SignUpPage() {
 
     if (data) {
       toast.add({ title: "Account created successfully!", type: "success" })
-      router.push("/signin")
+      router.replace("/signin")
+      return
     }
     if (error) {
       toast.add({

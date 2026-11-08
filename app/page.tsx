@@ -1,5 +1,11 @@
-import { HeroSection } from "@/components/hero-section"
+import { HeroSection } from "@/app/components/hero-section"
+import { SiteNavbar } from "./components/site-navbar"
 
 export default function Page() {
-  return <HeroSection />
+  return (
+    <>
+      <SiteNavbar />
+      <HeroSection />
+    </>
+  )
 }

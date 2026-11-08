@@ -25,7 +25,7 @@ export default function SignInPage() {
     })
     if (data) {
       toast.add({ title: "Logged in successfully!", type: "success" })
-      router.push("/")
+      router.replace("/")
       return
     }
     if (error) {
