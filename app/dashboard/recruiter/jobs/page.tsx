@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { Plus, MoreVertical, Edit2, MapPinCheck } from "lucide-react"
+import { BsPeople } from "react-icons/bs"
 
 import { DeleteJobDialog } from "@/app/components/deletejobdialog"
 import { getJobs } from "@/lib/api/jobs"
@@ -78,13 +79,11 @@ const manageJobsPage = async () => {
             <thead>
               <tr className="border-b text-[11px] tracking-widest text-muted-foreground uppercase">
                 <JobTableHeader>Job Title</JobTableHeader>
-                <JobTableHeader>
-                  Company &amp; Location
-                </JobTableHeader>
-                <JobTableHeader>Category</JobTableHeader>
+                <JobTableHeader>Company &amp; Location</JobTableHeader>
                 <JobTableHeader>Type</JobTableHeader>
                 <JobTableHeader>Compensation</JobTableHeader>
                 <JobTableHeader>Status</JobTableHeader>
+                <JobTableHeader>Applicants</JobTableHeader>
                 <JobTableHeader>Deadline</JobTableHeader>
                 <JobTableHeader>Actions</JobTableHeader>
               </tr>
@@ -106,8 +105,13 @@ const manageJobsPage = async () => {
                 return (
                   <tr key={job._id} className="border-b last:border-b-0">
                     {/* job title */}
-                    <JobTableCell className="font-medium">
-                      {job.jobTitle}
+                    <JobTableCell>
+                      <p className="font-medium whitespace-nowrap">
+                        {job.jobTitle}
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {job.category}
+                      </p>
                     </JobTableCell>
 
                     {/* company & location */}
@@ -119,17 +123,9 @@ const manageJobsPage = async () => {
                       </p>
                     </JobTableCell>
 
-                    {/* category */}
-                    <JobTableCell className="text-muted-foreground">
-                      {job.category}
-                    </JobTableCell>
-
                     {/* type — remote hole Remote badge, na hole jobType */}
                     <JobTableCell>
-                      <JobTypeBadge
-                        remote={job.remote}
-                        jobType={job.jobType}
-                      />
+                      <JobTypeBadge remote={job.remote} jobType={job.jobType} />
                     </JobTableCell>
 
                     {/* compensation */}
@@ -146,6 +142,13 @@ const manageJobsPage = async () => {
                     {/* status — deadline theke dinamic */}
                     <JobTableCell>
                       <JobStatusBadge status={status} />
+                    </JobTableCell>
+                    {/* Temporary display until applicant counts come from the API */}
+                    <JobTableCell>
+                      <span className="inline-flex items-center gap-2 text-muted-foreground">
+                        <BsPeople className="size-4" aria-hidden="true" />
+                        <span>12 applicants</span>
+                      </span>
                     </JobTableCell>
 
                     {/* deadline */}
