@@ -29,12 +29,19 @@ export default function AddJobsPage() {
     event.preventDefault()
     const form = event.currentTarget
     const raw = new FormData(event.currentTarget)
+    const now = new Date()
+    const postedDate = [
+      now.getFullYear(),
+      String(now.getMonth() + 1).padStart(2, "0"),
+      String(now.getDate()).padStart(2, "0"),
+    ].join("-")
 
     const jobData: JobFormData = {
       jobTitle: raw.get("jobTitle") as string,
       companyName: raw.get("companyName") as string,
       category: raw.get("category") as string,
       jobType: raw.get("jobType") as string,
+      postedDate,
       remote: raw.get("remote") === "yes",
       location: raw.get("location") as string,
       deadline: raw.get("deadline") as string,

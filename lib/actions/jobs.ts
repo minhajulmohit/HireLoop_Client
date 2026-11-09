@@ -6,6 +6,7 @@ export type JobFormData = {
   companyName: string
   category: string
   jobType: string
+  postedDate: string
   remote: boolean
   location: string
   deadline: string
