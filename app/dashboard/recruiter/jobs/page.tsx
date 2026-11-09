@@ -3,11 +3,17 @@ import { Plus, MoreVertical, Edit2, MapPinCheck } from "lucide-react"
 
 import { DeleteJobDialog } from "@/app/components/deletejobdialog"
 import { getJobs } from "@/lib/api/jobs"
-import type { JobFormData } from "@/lib/actions/jobs"
+import {
+  JobStatusBadge,
+  JobTableCell,
+  JobTableHeader,
+  JobTypeBadge,
+} from "@/components/jobs/job-table"
+import type { JobListing, JobStatus } from "@/lib/types/jobs"
 
-export type TJobs = JobFormData & { _id: string }
+export type TJobs = JobListing
 // deadline gate gele job ta Expired — status ekhane theke automatic ashe
-function getStatus(deadline: string) {
+function getStatus(deadline: string): JobStatus {
   if (new Date(deadline) < new Date()) return "Expired"
   return "Active"
 }
@@ -40,7 +46,7 @@ function formatPostedAgo(date: string) {
 }
 
 const manageJobsPage = async () => {
-  const jobs: TJobs[] = await getJobs()
+  const jobs = await getJobs()
 
   return (
     <div className="w-full p-4 md:p-6 lg:p-8">
@@ -71,27 +77,27 @@ const manageJobsPage = async () => {
           <table className="w-full min-w-225 text-left text-sm">
             <thead>
               <tr className="border-b text-[11px] tracking-widest text-muted-foreground uppercase">
-                <th className="px-5 py-4 font-medium">Job Title</th>
-                <th className="px-5 py-4 font-medium">
+                <JobTableHeader>Job Title</JobTableHeader>
+                <JobTableHeader>
                   Company &amp; Location
-                </th>
-                <th className="px-5 py-4 font-medium">Category</th>
-                <th className="px-5 py-4 font-medium">Type</th>
-                <th className="px-5 py-4 font-medium">Compensation</th>
-                <th className="px-5 py-4 font-medium">Status</th>
-                <th className="px-5 py-4 font-medium">Deadline</th>
-                <th className="px-5 py-4 font-medium">Actions</th>
+                </JobTableHeader>
+                <JobTableHeader>Category</JobTableHeader>
+                <JobTableHeader>Type</JobTableHeader>
+                <JobTableHeader>Compensation</JobTableHeader>
+                <JobTableHeader>Status</JobTableHeader>
+                <JobTableHeader>Deadline</JobTableHeader>
+                <JobTableHeader>Actions</JobTableHeader>
               </tr>
             </thead>
             <tbody>
               {jobs.length === 0 && (
                 <tr>
-                  <td
+                  <JobTableCell
                     colSpan={8}
-                    className="px-5 py-8 text-center text-muted-foreground"
+                    className="py-8 text-center text-muted-foreground"
                   >
                     No jobs found.
-                  </td>
+                  </JobTableCell>
                 </tr>
               )}
               {jobs.map((job) => {
@@ -100,31 +106,34 @@ const manageJobsPage = async () => {
                 return (
                   <tr key={job._id} className="border-b last:border-b-0">
                     {/* job title */}
-                    <td className="px-5 py-4 font-medium">{job.jobTitle}</td>
+                    <JobTableCell className="font-medium">
+                      {job.jobTitle}
+                    </JobTableCell>
 
                     {/* company & location */}
-                    <td className="px-5 py-4">
+                    <JobTableCell>
                       <p className="font-medium">{job.companyName}</p>
                       <p className="mt-0.5 inline-flex items-center justify-center gap-0.5 text-xs text-muted-foreground">
                         <MapPinCheck size={20} />
                         {job.location}
                       </p>
-                    </td>
+                    </JobTableCell>
 
                     {/* category */}
-                    <td className="px-5 py-4 text-muted-foreground">
+                    <JobTableCell className="text-muted-foreground">
                       {job.category}
-                    </td>
+                    </JobTableCell>
 
                     {/* type — remote hole Remote badge, na hole jobType */}
-                    <td className="px-5 py-4">
-                      <span className="inline-block rounded-md bg-violet-500/10 px-2.5 py-1 text-xs font-medium text-violet-600 dark:text-violet-400">
-                        {job.remote ? "Remote" : job.jobType}
-                      </span>
-                    </td>
+                    <JobTableCell>
+                      <JobTypeBadge
+                        remote={job.remote}
+                        jobType={job.jobType}
+                      />
+                    </JobTableCell>
 
                     {/* compensation */}
-                    <td className="px-5 py-4 whitespace-nowrap">
+                    <JobTableCell className="whitespace-nowrap">
                       <p className="font-medium">
                         ${job.minSalary.toLocaleString()} - $
                         {job.maxSalary.toLocaleString()}
@@ -132,37 +141,27 @@ const manageJobsPage = async () => {
                       <p className="mt-0.5 text-xs text-muted-foreground capitalize">
                         {job.salaryFrequency.replace("-", " ")}
                       </p>
-                    </td>
+                    </JobTableCell>
 
                     {/* status — deadline theke dinamic */}
-                    <td className="px-5 py-4">
-                      <span className="inline-flex items-center gap-1.5">
-                        <span
-                          className={`size-2 rounded-full ${
-                            status === "Active"
-                              ? "bg-green-500"
-                              : "bg-zinc-400 dark:bg-zinc-600"
-                          }`}
-                        />
-                        {status}
-                      </span>
-                    </td>
+                    <JobTableCell>
+                      <JobStatusBadge status={status} />
+                    </JobTableCell>
 
                     {/* deadline */}
-                    <td className="px-5 py-4">
+                    <JobTableCell>
                       <p className="whitespace-nowrap">
                         {formatDate(job.deadline)}
                       </p>
                       <p className="mt-1 text-xs whitespace-nowrap text-muted-foreground">
                         {formatPostedAgo(job.postedDate)}
                       </p>
-                    </td>
+                    </JobTableCell>
 
                     {/* actions */}
-                    <td className="px-5 py-4">
+                    <JobTableCell>
                       <div className="flex items-center gap-1">
                         <button className="inline-flex h-8 items-center gap-1 rounded-lg bg-violet-600/20 px-3 text-xs font-medium text-white transition-colors hover:bg-violet-500">
-                          Update
                           <Edit2 size={15} />
                         </button>
                         <DeleteJobDialog jobId={job._id} />
@@ -170,7 +169,7 @@ const manageJobsPage = async () => {
                           <MoreVertical className="size-4" />
                         </button>
                       </div>
-                    </td>
+                    </JobTableCell>
                   </tr>
                 )
               })}

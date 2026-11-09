@@ -14,8 +14,9 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { createJob } from "@/lib/actions/jobs"
-import type { JobFormData } from "@/lib/actions/jobs"
+import type { JobFormData } from "@/lib/types/jobs"
 import { toast } from "@/components/ui/toast"
+import { useRouter } from "next/navigation"
 
 const inputClassName =
   "h-10 rounded-lg border border-input bg-background px-3 text-sm dark:bg-input/30"
@@ -24,6 +25,7 @@ const selectClassName =
 
 export default function AddJobsPage() {
   const [submitted, setSubmitted] = useState(false)
+  const router = useRouter()
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -58,6 +60,9 @@ export default function AddJobsPage() {
       toast.add({ title: result.message, type: "success" })
       setSubmitted(true)
       form.reset()
+      setTimeout(() => {
+        router.push("/dashboard/recruiter/jobs")
+      }, 1000)
     } else {
       toast.add({
         title: "Something went wrong while posting the job. Please try again.",

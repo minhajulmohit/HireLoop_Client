@@ -1,21 +1,8 @@
+import type { JobFormData } from "@/lib/types/jobs"
+
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"
 
-// Add-jobs form er data — backend (POST /jobs) e jacche
-export type JobFormData = {
-  jobTitle: string
-  companyName: string
-  category: string
-  jobType: string
-  postedDate: string
-  remote: boolean
-  location: string
-  deadline: string
-  minSalary: number
-  maxSalary: number
-  salaryFrequency: string
-  responsibilities: string
-  requirements: string
-}
+export type { JobFormData } from "@/lib/types/jobs"
 
 export const createJob = async (jobData: JobFormData) => {
   const res = await fetch(`${baseUrl}/jobs`, {
