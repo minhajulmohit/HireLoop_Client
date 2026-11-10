@@ -1,31 +1,9 @@
 import Image from "next/image"
+import Link from "next/link"
 import { Bookmark, Briefcase, DollarSign, MapPin } from "lucide-react"
 
 import type { JobListing } from "@/lib/types/jobs"
-
-// public/companies folder er logo gulo company name er sathe match koray
-const COMPANY_LOGOS = [
-  "adobe",
-  "airbnb",
-  "amazon",
-  "apple",
-  "google",
-  "meta",
-  "microsoft",
-  "netflix",
-  "nvidia",
-  "spotify",
-  "tesla",
-  "uber",
-]
-
-function getCompanyLogo(companyName: string) {
-  const match = COMPANY_LOGOS.find((logo) =>
-    companyName.toLowerCase().replace(/\s+/g, "").includes(logo)
-  )
-  if (!match) return null
-  return `/companies/${match}.png`
-}
+import { getCompanyLogo } from "./company-logo"
 
 // deadline gate gele job ta Expired — recruiter jobs page er moto
 function isExpired(job: JobListing) {
@@ -94,21 +72,26 @@ export function JobCard({ job }: { job: JobListing }) {
             <span className="rounded-md bg-red-500/10 px-2.5 py-1 text-xs font-medium text-red-600 dark:text-red-400">
               Expired
             </span>
-            <button
-              type="button"
+            <Link
+              href={`/browse-jobs/${job._id}`}
               className="inline-flex h-8 items-center rounded-lg border border-border px-3.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
             >
               Show Details
-            </button>
+            </Link>
           </>
         ) : (
-          // active job — apatoto Easy Apply button
-          <button
-            type="button"
-            className="inline-flex h-8 items-center rounded-lg bg-emerald-600 px-3.5 text-sm font-medium text-white transition-colors hover:bg-emerald-500"
-          >
-            Easy Apply
-          </button>
+          // active job — Easy Apply button, details page e nite jay
+          <>
+            <span className="rounded-md bg-green-500/10 px-2.5 py-1 text-xs font-medium text-green-600 dark:text-green-400">
+              Deadline {job.deadline}
+            </span>
+            <Link
+              href={`/browse-jobs/${job._id}`}
+              className="inline-flex h-8 items-center rounded-lg bg-violet-600 px-3.5 text-sm font-medium text-white transition-colors hover:bg-violet-500"
+            >
+              Easy Apply
+            </Link>
+          </>
         )}
       </div>
     </article>

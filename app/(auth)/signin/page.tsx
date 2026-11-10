@@ -1,11 +1,11 @@
 "use client"
 
 import { toast } from "@/components/ui/toast"
-import { authClient } from "@/lib/auth-client"
+import { authClient, useSession } from "@/lib/auth-client"
 import Image from "next/image"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react"
 import { FcGoogle } from "react-icons/fc"
 
 const inputClasses =
@@ -13,9 +13,21 @@ const inputClasses =
 
 export default function SignInPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get("redirectTo") ?? "/"
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+
+  // already logged in hole form na dekhiye sorai redirectTo te pathiye dey
+  // (apply button theke bounce hoye ashle session race check korar jonno)
+  const { data: session, isPending } = useSession()
+
+  useEffect(() => {
+    if (!isPending && session?.user) {
+      router.replace(redirectTo)
+    }
+  }, [isPending, session, redirectTo, router])
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -25,7 +37,7 @@ export default function SignInPage() {
     })
     if (data) {
       toast.add({ title: "Logged in successfully!", type: "success" })
-      router.replace("/")
+      router.push(redirectTo)
       return
     }
     if (error) {
