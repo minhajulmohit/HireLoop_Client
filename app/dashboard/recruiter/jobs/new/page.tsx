@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/field"
 import { createJob } from "@/lib/actions/jobs"
 import type { JobFormData } from "@/lib/types/jobs"
-import { JOB_CATEGORIES } from "@/lib/constants/job-categories"
+import { JOB_CATEGORIES, JOB_TYPES } from "@/lib/constants/job-categories"
 import { toast } from "@/components/ui/toast"
 import { useRouter } from "next/navigation"
 
@@ -142,23 +142,21 @@ export default function AddJobsPage() {
           <Field className="md:col-span-2">
             <FieldLabel>Job Type</FieldLabel>
             <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-              {["Full-time", "Part-time", "Contract", "Internship"].map(
-                (type) => (
-                  <label
-                    key={type}
-                    className="flex h-10 cursor-pointer items-center justify-center rounded-lg border text-sm has-checked:border-violet-500 has-checked:bg-violet-500/10"
-                  >
-                    <input
-                      className="sr-only"
-                      type="radio"
-                      name="jobType"
-                      value={type}
-                      defaultChecked={type === "Full-time"}
-                    />
-                    {type}
-                  </label>
-                )
-              )}
+              {JOB_TYPES.map((type) => (
+                <label
+                  key={type}
+                  className="flex h-10 cursor-pointer items-center justify-center rounded-lg border text-sm has-checked:border-violet-500 has-checked:bg-violet-500/10"
+                >
+                  <input
+                    className="sr-only"
+                    type="radio"
+                    name="jobType"
+                    value={type}
+                    defaultChecked={type === "Full-time"}
+                  />
+                  {type}
+                </label>
+              ))}
             </div>
           </Field>
         </FieldGroup>

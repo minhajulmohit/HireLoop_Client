@@ -4,3 +4,11 @@ export const JOB_CATEGORIES = [
   "Marketing",
   "Sales",
 ] as const
+
+export const JOB_TYPES = [
+  "Full-time",
+  "Part-time",
+  "Contract",
+  "Internship",
+  "Freelance",
+] as const
