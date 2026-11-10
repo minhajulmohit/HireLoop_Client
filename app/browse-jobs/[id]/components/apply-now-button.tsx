@@ -1,6 +1,9 @@
 "use client"
 
+import { toast } from "@/components/ui/toast"
+import { applyToJob } from "@/lib/actions/applications"
 import { useSession } from "@/lib/auth-client"
+import type { JobApplicationData } from "@/lib/types/applications"
 import { JobFormData } from "@/lib/types/jobs"
 import { useRouter } from "next/navigation"
 
@@ -14,15 +17,35 @@ export function ApplyNowButton({
   const { data: session } = useSession()
   const user = session?.user
 
-  const handleAplyNow = () => {
+  const handleApplyNow = async () => {
     if (!user) {
       router.push(`/signin?redirectTo=/browse-jobs/${job._id}`)
+      return
+    } else if (user.role === "seeker") {
+      const application: JobApplicationData = {
+        jobId: job._id,
+        jobTitle: job.jobTitle,
+        companyName: job.companyName,
+        userId: user.id,
+        email: user.email,
+      }
+      const result = await applyToJob(application)
+
+      if (result.insertedId) {
+        toast.add({
+          title: "Applied to the job successfully!",
+          type: "success",
+        })
+        router.push("/browse-jobs")
+      }
+    } else {
+      console.log("user is not seeker")
     }
   }
 
   return (
     <button
-      onClick={handleAplyNow}
+      onClick={handleApplyNow}
       type="button"
       className="inline-flex h-10 items-center rounded-xl bg-foreground px-4 text-sm font-medium text-background transition-colors hover:bg-foreground/85"
     >
