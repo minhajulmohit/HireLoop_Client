@@ -11,7 +11,6 @@ import {
   Bookmark,
   FileText,
   type LucideIcon,
-  
   PlusCircle,
 } from "lucide-react"
 import Image from "next/image"
@@ -68,6 +67,11 @@ const menuItemsByRole: Record<DashboardRole, MenuItem[]> = {
     { name: "Dashboard", url: "/dashboard/seeker", icon: LayoutDashboard },
     { name: "Jobs", url: "/dashboard/seeker/jobs", icon: BriefcaseBusiness },
     { name: "Saved Jobs", url: "/dashboard/seeker/saved-jobs", icon: Bookmark },
+    {
+      name: "Applications",
+      url: "/dashboard/seeker/applications",
+      icon: FileText,
+    },
     { name: "Billing", url: "/dashboard/seeker/billing", icon: WalletCards },
     { name: "Settings", url: "/dashboard/seeker/settings", icon: Settings },
   ],

@@ -28,6 +28,10 @@ export function ApplyNowButton({
         companyName: job.companyName,
         userId: user.id,
         email: user.email,
+        remote: job.remote,
+        jobType: job.jobType,
+        status: "Applied",
+        applyDate: new Date(),
       }
       const result = await applyToJob(application)
 
