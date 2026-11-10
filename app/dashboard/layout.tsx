@@ -1,6 +1,6 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import type { ReactNode } from "react"
-import { DashboardSidebar } from "../components/dashboardsidebar"
+import { DashboardSidebar } from "@/components/layout/dashboardsidebar"
 
 const dashboardLayout = ({ children }: { children: ReactNode }) => {
   return (

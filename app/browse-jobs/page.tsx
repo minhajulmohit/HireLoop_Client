@@ -1,11 +1,11 @@
 import { getJobs } from "@/lib/api/jobs"
 import { JOB_TYPES } from "@/lib/constants/job-categories"
 
-import { JobCard } from "./components/job-card"
-import { JobFilters } from "./components/job-filters"
-import { JobPagination, PER_PAGE } from "./components/job-pagination"
-import { JobSearchBar } from "./components/job-search-bar"
-import { SortSelect } from "./components/sort-select"
+import { JobCard } from "@/components/jobs/job-card"
+import { JobFilters } from "@/components/jobs/job-filters"
+import { JobPagination, PER_PAGE } from "@/components/jobs/job-pagination"
+import { JobSearchBar } from "@/components/jobs/job-search-bar"
+import { SortSelect } from "@/components/jobs/sort-select"
 
 const browseJobsPage = async ({
   searchParams,

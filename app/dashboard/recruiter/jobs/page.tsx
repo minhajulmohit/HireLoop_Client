@@ -2,8 +2,8 @@ import Link from "next/link"
 import { Plus, MoreVertical, Edit2, MapPinCheck } from "lucide-react"
 import { BsPeople } from "react-icons/bs"
 
-import { DeleteJobDialog } from "@/app/components/deletejobdialog"
 import { getJobs } from "@/lib/api/jobs"
+import { DeleteJobDialog } from "@/components/jobs/deletejobdialog"
 import {
   JobStatusBadge,
   JobTableCell,

@@ -18,8 +18,8 @@ import {
 
 import { getJobById } from "@/lib/api/jobs"
 import type { JobListing } from "@/lib/types/jobs"
-import { getCompanyLogo } from "../components/company-logo"
-import { ApplyNowButton } from "./components/apply-now-button"
+import { getCompanyLogo } from "@/components/jobs/company-logo"
+import { ApplyNowButton } from "@/components/jobs/apply-now-button"
 
 // deadline gate gele job ta Expired
 function isExpired(job: JobListing) {
