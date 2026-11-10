@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/field"
 import { createJob } from "@/lib/actions/jobs"
 import type { JobFormData } from "@/lib/types/jobs"
+import { JOB_CATEGORIES } from "@/lib/constants/job-categories"
 import { toast } from "@/components/ui/toast"
 import { useRouter } from "next/navigation"
 
@@ -121,14 +122,20 @@ export default function AddJobsPage() {
 
           <Field>
             <FieldLabel>Job Category</FieldLabel>
-            <select name="category" className={selectClassName} required>
+            <select
+              name="category"
+              className={selectClassName}
+              defaultValue=""
+              required
+            >
               <option value="" disabled>
                 Select category
               </option>
-              <option>Engineering &amp; Tech</option>
-              <option>Design</option>
-              <option>Marketing</option>
-              <option>Sales</option>
+              {JOB_CATEGORIES.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
             </select>
           </Field>
 
