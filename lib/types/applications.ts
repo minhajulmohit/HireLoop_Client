@@ -10,7 +10,7 @@ export type JobApplicationData = {
   jobId: string
   jobTitle: string
   companyName: string
-  userId: string
+  applicantId: string
   email: string
   remote: boolean
   jobType: string

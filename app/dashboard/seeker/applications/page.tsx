@@ -1,4 +1,6 @@
 import { getAppliocations } from "@/lib/api/applications"
+import { auth } from "@/lib/auth"
+import { headers } from "next/headers"
 import type { ApplicationStatus } from "@/lib/types/applications"
 import {
   Bell,
@@ -43,7 +45,12 @@ function formatApplyDate(applyDate: string | Date) {
 }
 
 export default async function ApplicationsPage() {
-  const applications = await getAppliocations()
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+  const applications = await getAppliocations(`applicantId=${session?.user.id}`)
+
   const shortlisted = applications.filter(
     (application) => application.status === "Shortlisted"
   ).length

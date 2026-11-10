@@ -26,7 +26,7 @@ export function ApplyNowButton({
         jobId: job._id,
         jobTitle: job.jobTitle,
         companyName: job.companyName,
-        userId: user.id,
+        applicantId: user.id,
         email: user.email,
         remote: job.remote,
         jobType: job.jobType,
