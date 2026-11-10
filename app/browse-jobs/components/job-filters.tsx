@@ -23,50 +23,22 @@ export function JobFilters({
 }: JobFiltersProps) {
   const router = useRouter()
 
-  // current URL er params update kore abar /browse-jobs-e push kore
-  // server side theke notun list animate aase
-  const updateParams = (update: (params: URLSearchParams) => void) => {
+  const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
     const params = new URLSearchParams(window.location.search)
-    update(params)
-    params.delete("page")
+    params.set(e.target.name, e.target.value)
+
     const query = params.toString()
     router.push(query ? `/browse-jobs?${query}` : "/browse-jobs")
-  }
-
-  // initially kono type select nai — tokhon shob job dekhay
-  // ekta somoy sudhu ekta type select kora jay
-  const selectType = (value: string) => {
-    updateParams((params) => {
-      if (value) {
-        params.set("jobType", value)
-      } else {
-        params.delete("jobType")
-      }
-    })
-  }
-
-  // remote alada vabe select kora jay
-  const toggleRemote = () => {
-    updateParams((params) => {
-      if (params.get("remote") === "true") {
-        params.delete("remote")
-      } else {
-        params.set("remote", "true")
-      }
-    })
-  }
-
-  const selectCategory = (value: string) => {
-    updateParams((params) => {
-      params.set("category", value)
-    })
   }
 
   return (
     <aside className="w-full shrink-0 rounded-2xl border bg-card p-5 lg:w-64">
       <div className="flex items-center justify-between gap-2">
         <h2 className="inline-flex items-center gap-2 font-semibold">
-          <SlidersHorizontal className="size-4 text-muted-foreground" aria-hidden="true" />
+          <SlidersHorizontal
+            className="size-4 text-muted-foreground"
+            aria-hidden="true"
+          />
           Filters
         </h2>
         {/* reset — sob filter shor, shob job abar dekhay */}
@@ -90,8 +62,9 @@ export function JobFilters({
               <input
                 type="radio"
                 name="jobType"
+                value={type}
                 checked={jobType === type}
-                onChange={() => selectType(type)}
+                onChange={handleCheckbox}
                 className="size-4 accent-violet-600"
               />
               <span>{type}</span>
@@ -108,8 +81,10 @@ export function JobFilters({
         <label className="flex cursor-pointer items-center gap-2.5 text-sm text-foreground/80 transition-colors hover:text-foreground">
           <input
             type="checkbox"
+            name="remote"
+            value="true"
             checked={remoteOnly}
-            onChange={toggleRemote}
+            onChange={handleCheckbox}
             className="size-4 accent-violet-600"
           />
           <span>Remote</span>
@@ -129,8 +104,9 @@ export function JobFilters({
               <input
                 type="radio"
                 name="category"
+                value={item}
                 checked={category === item}
-                onChange={() => selectCategory(item)}
+                onChange={handleCheckbox}
                 className="size-4 accent-violet-600"
               />
               <span>{item}</span>

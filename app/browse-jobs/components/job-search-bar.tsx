@@ -8,21 +8,19 @@ export function JobSearchBar({ defaultValue }: { defaultValue: string }) {
   const router = useRouter()
   const [value, setValue] = useState(defaultValue)
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    const params = new URLSearchParams(window.location.search)
-    const keyword = value.trim()
+    const formData = new FormData(event.currentTarget)
+    const data = Object.fromEntries(formData.entries())
+    console.log(data)
+    const search = data.searchField
 
-    if (keyword) {
-      params.set("search", keyword)
-    } else {
-      params.delete("search")
-    }
-    params.delete("page")
+    const params = new URLSearchParams()
 
-    const query = params.toString()
-    router.push(query ? `/browse-jobs?${query}` : "/browse-jobs")
+    params.set("search", search as string)
+    
+    router.push(`/browse-jobs?${params.toString()}`)
   }
 
   return (
@@ -32,15 +30,16 @@ export function JobSearchBar({ defaultValue }: { defaultValue: string }) {
     >
       <div className="relative flex-1">
         <Search
-          className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+          className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
           aria-hidden="true"
         />
         <input
           type="search"
+          name="searchField"
           value={value}
           onChange={(event) => setValue(event.target.value)}
           placeholder="Search by job title, keywords..."
-          className="h-11 w-full rounded-xl border border-input bg-transparent pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
+          className="h-11 w-full rounded-xl border border-input bg-transparent pr-3 pl-9 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
         />
       </div>
 
