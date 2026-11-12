@@ -8,3 +8,10 @@ export const getAppliocations = async (
   const res = await fetch(`${baseUrl}/applications?${query}`)
   return res.json()
 }
+
+export const getAppliocationsCount = async (
+  query = ""
+): Promise<{ count: number }> => {
+  const res = await fetch(`${baseUrl}/applications/count?${query}`)
+  return res.json()
+}

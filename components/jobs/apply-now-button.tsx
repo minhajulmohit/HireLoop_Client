@@ -2,10 +2,12 @@
 
 import { toast } from "@/components/ui/toast"
 import { applyToJob } from "@/lib/actions/applications"
+import { getAppliocationsCount } from "@/lib/api/applications"
 import { useSession } from "@/lib/auth-client"
 import type { JobApplicationData } from "@/lib/types/applications"
 import { JobFormData } from "@/lib/types/jobs"
 import { useRouter } from "next/navigation"
+import { title } from "process"
 
 // server component e onClick dite pare na, tai button ta client e rakha holo
 export function ApplyNowButton({
@@ -22,25 +24,37 @@ export function ApplyNowButton({
       router.push(`/signin?redirectTo=/browse-jobs/${job._id}`)
       return
     } else if (user.role === "seeker") {
-      const application: JobApplicationData = {
-        jobId: job._id,
-        jobTitle: job.jobTitle,
-        companyName: job.companyName,
-        applicantId: user.id,
-        email: user.email,
-        remote: job.remote,
-        jobType: job.jobType,
-        status: "Applied",
-        applyDate: new Date(),
-      }
-      const result = await applyToJob(application)
+      const countResult = await getAppliocationsCount(`applicantId=${user.id}`)
 
-      if (result.insertedId) {
+      if (countResult.count >= 5) {
+        router.push(`/payment`)
         toast.add({
-          title: "Applied to the job successfully!",
-          type: "success",
+          title: "Application limit reached",
+          type: "information",
         })
-        router.push("/browse-jobs")
+
+        return
+      } else {
+        const application: JobApplicationData = {
+          jobId: job._id,
+          jobTitle: job.jobTitle,
+          companyName: job.companyName,
+          applicantId: user.id,
+          email: user.email,
+          remote: job.remote,
+          jobType: job.jobType,
+          status: "Applied",
+          applyDate: new Date(),
+        }
+        const result = await applyToJob(application)
+
+        if (result.insertedId) {
+          toast.add({
+            title: "Applied to the job successfully!",
+            type: "success",
+          })
+          router.push("/browse-jobs")
+        }
       }
     } else {
       console.log("user is not seeker")
