@@ -1,5 +1,3 @@
-import React from "react"
-
 const recruiterPage = () => {
   return <div>Recruiter</div>
 }

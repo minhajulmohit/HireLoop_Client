@@ -12,6 +12,10 @@ export type JobFormData = {
   salaryFrequency: string
   responsibilities: string
   requirements: string
+  description: string
+  applicantCount: number
+  recruiterId: string
+  companyId?: string
 }
 
 export type JobStatus = "Active" | "Expired"

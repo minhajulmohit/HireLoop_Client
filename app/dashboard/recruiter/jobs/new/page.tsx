@@ -18,6 +18,7 @@ import type { JobFormData } from "@/lib/types/jobs"
 import { JOB_CATEGORIES, JOB_TYPES } from "@/lib/constants/job-categories"
 import { toast } from "@/components/ui/toast"
 import { useRouter } from "next/navigation"
+import { useSession } from "@/lib/auth-client"
 
 const inputClassName =
   "h-10 rounded-lg border border-input bg-background px-3 text-sm dark:bg-input/30"
@@ -25,6 +26,8 @@ const selectClassName =
   "h-10 w-full rounded-lg border border-input bg-background text-foreground px-3 text-sm outline-none [&>option]:bg-background [&>option]:text-foreground dark:bg-input/30 dark:text-foreground dark:[color-scheme:dark]"
 
 export default function AddJobsPage() {
+  const { data: session } = useSession()
+
   const [submitted, setSubmitted] = useState(false)
   const router = useRouter()
 
@@ -53,6 +56,9 @@ export default function AddJobsPage() {
       salaryFrequency: raw.get("salaryFrequency") as string,
       responsibilities: raw.get("responsibilities") as string,
       requirements: raw.get("requirements") as string,
+      description: raw.get("description") as string,
+      applicantCount: 0,
+      recruiterId: session?.user.id ?? ("" as string),
     }
 
     const result = await createJob(jobData)
@@ -255,6 +261,14 @@ export default function AddJobsPage() {
             <FieldLabel>Qualifications &amp; Requirements</FieldLabel>
             <Textarea
               name="requirements"
+              placeholder="5+ years of experience with React, TypeScript, and modern state architectures."
+              rows={5}
+            />
+          </Field>
+          <Field>
+            <FieldLabel>Job Description</FieldLabel>
+            <Textarea
+              name="description"
               placeholder="5+ years of experience with React, TypeScript, and modern state architectures."
               rows={5}
             />

@@ -189,13 +189,7 @@ const jobDetailsPage = async ({
               <h2 className="font-semibold">Job Description</h2>
               {/* dummy description — pore real data ashle replace korbi */}
               <p className="mt-3 text-sm leading-relaxed text-foreground/70">
-                At CloudScale AI, we are engineering the next generation of
-                infrastructure for automation and agentic AI. We are looking for
-                a Senior Product Designer to design intuitive, scalable, and
-                accessible experiences that bring clarity and delight to complex
-                AI workflows. You will work closely with leadership, product,
-                and engineering to define the vision for our core platform and
-                shape how users interact with intelligent systems.
+               {job.description}
               </p>
             </section>
 

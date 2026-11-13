@@ -11,6 +11,7 @@ import {
   JobTypeBadge,
 } from "@/components/jobs/job-table"
 import type { JobListing, JobStatus } from "@/lib/types/jobs"
+import { getSession } from "@/lib/core/server"
 
 export type TJobs = JobListing
 // deadline gate gele job ta Expired — status ekhane theke automatic ashe
@@ -47,7 +48,9 @@ function formatPostedAgo(date: string) {
 }
 
 const manageJobsPage = async () => {
-  const jobs = await getJobs()
+  const session = await getSession()
+
+  const jobs = await getJobs(`recruiterId=${session?.user.id}`)
 
   return (
     <div className="w-full p-4 md:p-6 lg:p-8">
@@ -147,7 +150,7 @@ const manageJobsPage = async () => {
                     <JobTableCell>
                       <span className="inline-flex items-center gap-2 text-muted-foreground">
                         <BsPeople className="size-4" aria-hidden="true" />
-                        <span>12 applicants</span>
+                        <span>{job.applicantCount}</span>
                       </span>
                     </JobTableCell>
 
