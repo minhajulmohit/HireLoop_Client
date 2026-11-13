@@ -3,6 +3,7 @@
 import { toast } from "@/components/ui/toast"
 import { applyToJob } from "@/lib/actions/applications"
 import { getAppliocationsCount } from "@/lib/api/applications"
+import { getUserPremiumById } from "@/lib/api/users"
 import { useSession } from "@/lib/auth-client"
 import type { JobApplicationData } from "@/lib/types/applications"
 import { JobFormData } from "@/lib/types/jobs"
@@ -24,9 +25,11 @@ export function ApplyNowButton({
       router.push(`/signin?redirectTo=/browse-jobs/${job._id}`)
       return
     } else if (user.role === "seeker") {
+      const premiumResult = await getUserPremiumById(user.id)
+
       const countResult = await getAppliocationsCount(`applicantId=${user.id}`)
 
-      if (countResult.count >= 5) {
+      if (!premiumResult.premium && countResult.count >= 5) {
         router.push(`/payment`)
         toast.add({
           title: "Application limit reached",

@@ -25,7 +25,7 @@ export default async function PaymentPage({
       </header>
 
       <div className="flex flex-1 items-center justify-center px-5 py-10">
-        <section className="w-full max-w-md rounded-xl border border-white/10 bg-white/[0.03] p-6 shadow-2xl shadow-black/20 sm:p-8">
+        <section className="w-full max-w-md rounded-xl border border-white/10 bg-white/3 p-6 shadow-2xl shadow-black/20 sm:p-8">
           <p className="text-xs font-medium uppercase tracking-[0.16em] text-white/45">
             Checkout
           </p>
