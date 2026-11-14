@@ -17,3 +17,7 @@ export type JobApplicationData = {
   status: ApplicationStatus
   applyDate: string | Date
 }
+
+export type JobApplicationRecord = JobApplicationData & {
+  _id: string
+}

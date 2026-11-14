@@ -86,20 +86,10 @@ function DetailCard({
     )
   }
 
-  return (
-    <div className="rounded-xl border bg-card p-4">
-      {content}
-    </div>
-  )
+  return <div className="rounded-xl border bg-card p-4">{content}</div>
 }
 
-function DetailSection({
-  title,
-  text,
-}: {
-  title: string
-  text: string
-}) {
+function DetailSection({ title, text }: { title: string; text: string }) {
   return (
     <section className="rounded-2xl border bg-card p-5 md:p-6">
       <h2 className="font-semibold">{title}</h2>
@@ -175,7 +165,7 @@ export function JobEditor({ job }: { job: JobListing }) {
           className="mb-4 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="size-4" />
-          Back to jobs
+          Back to all jobs
         </Link>
         <p className="mb-1 text-xs text-muted-foreground">
           Manage Jobs / Job Details

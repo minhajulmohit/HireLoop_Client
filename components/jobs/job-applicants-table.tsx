@@ -5,8 +5,10 @@ import { Search } from "lucide-react"
 
 import type {
   ApplicationStatus,
-  JobApplicationData,
+  JobApplicationRecord,
 } from "@/lib/types/applications"
+import { updateApplicationsStatus } from "@/lib/actions/applications"
+import { toast } from "@/components/ui/toast"
 
 const APPLICATION_STATUSES: ApplicationStatus[] = [
   "Applied",
@@ -26,8 +28,8 @@ const STATUS_STYLES: Record<ApplicationStatus, string> = {
   Offered: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
 }
 
-function getApplicationKey(application: JobApplicationData) {
-  return `${application.applicantId}-${String(application.applyDate)}`
+function getApplicationKey(application: JobApplicationRecord) {
+  return application._id
 }
 
 function formatApplyDate(value: string | Date) {
@@ -45,7 +47,7 @@ function formatApplyDate(value: string | Date) {
 export function JobApplicantsTable({
   applications,
 }: {
-  applications: JobApplicationData[]
+  applications: JobApplicationRecord[]
 }) {
   const [search, setSearch] = useState("")
   const [statusByApplication, setStatusByApplication] = useState<
@@ -68,9 +70,26 @@ export function JobApplicantsTable({
     setStatusByApplication((current) => ({ ...current, [key]: status }))
   }
 
-  function handleStatusChange(key: string, value: string) {
+  async function handleStatusChange(id: string, key: string, value: string) {
     const status = APPLICATION_STATUSES.find((option) => option === value)
-    if (status) changeStatus(key, status)
+    if (!status) return
+
+    try {
+      await updateApplicationsStatus(id, { status })
+      changeStatus(key, status)
+      toast.add({
+        title: "Application status updated",
+        type: "success",
+      })
+    } catch (error) {
+      console.error("Failed to update application status", error)
+      toast.add({
+        title: "Couldn't update application status",
+        description:
+          error instanceof Error ? error.message : "Please try again.",
+        type: "error",
+      })
+    }
   }
 
   if (applications.length === 0) {
@@ -134,7 +153,7 @@ export function JobApplicantsTable({
                       ID: {application.applicantId}
                     </p>
                   </td>
-                  <td className="whitespace-nowrap px-4 py-4 text-muted-foreground">
+                  <td className="px-4 py-4 whitespace-nowrap text-muted-foreground">
                     {formatApplyDate(application.applyDate)}
                   </td>
                   <td className="px-4 py-4">{application.jobType}</td>
@@ -149,7 +168,11 @@ export function JobApplicantsTable({
                     <select
                       value={status}
                       onChange={(event) =>
-                        handleStatusChange(key, event.target.value)
+                        handleStatusChange(
+                          application._id,
+                          key,
+                          event.target.value
+                        )
                       }
                       aria-label={`Change status for ${application.email}`}
                       className="h-9 min-w-32 rounded-lg border border-input bg-background px-2 text-sm"
@@ -177,10 +200,6 @@ export function JobApplicantsTable({
           </tbody>
         </table>
       </div>
-      <p className="border-t bg-muted/20 px-4 py-3 text-xs text-muted-foreground">
-        Status changes are temporary and will reset when you leave or refresh
-        this page. Saving them requires a status-update API.
-      </p>
     </div>
   )
 }
