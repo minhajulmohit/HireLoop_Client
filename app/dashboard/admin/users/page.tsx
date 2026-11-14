@@ -1,13 +1,23 @@
+import { getAdminUsers } from "@/lib/api/admin-users"
+import { notFound } from "next/navigation"
 
-import { getUsers } from "@/lib/api/users"
+import { AdminUsersTable } from "@/components/admin/admin-users-table"
+import { getSession } from "@/lib/core/server"
 
-const adminUsersPage =async () => {
+export default async function AdminUsersPage() {
+  const session = await getSession()
 
+  if (session?.user.role !== "admin") {
+    notFound()
+  }
 
-const users= await getUsers()
+  const userList = await getAdminUsers()
 
-
-  return <div></div>
+  return (
+    <AdminUsersTable
+      users={userList.users}
+      totalUsers={userList.total}
+      currentUserId={session.user.id}
+    />
+  )
 }
-
-export default adminUsersPage

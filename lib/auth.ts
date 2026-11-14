@@ -3,12 +3,23 @@ import { betterAuth } from "better-auth"
 import { MongoClient } from "mongodb"
 import { mongodbAdapter } from "@better-auth/mongo-adapter"
 import { admin } from "better-auth/plugins"
+import { adminAc, userAc } from "better-auth/plugins/admin/access"
 
 const client = new MongoClient(process.env.MONGODB_URL as string)
 const db = client.db("hireloopdb")
 
 export const auth = betterAuth({
-plugins:[admin(),],
+  plugins: [
+    admin({
+      defaultRole: "seeker",
+      adminRoles: ["admin"],
+      roles: {
+        admin: adminAc,
+        recruiter: userAc,
+        seeker: userAc,
+      },
+    }),
+  ],
 
   baseURL: process.env.BETTER_AUTH_URL,
   emailAndPassword: {
