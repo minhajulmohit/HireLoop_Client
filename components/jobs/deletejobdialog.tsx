@@ -20,7 +20,15 @@ import { toast } from "@/components/ui/toast"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
-export function DeleteJobDialog({ jobId }: { jobId: string }) {
+export function DeleteJobDialog({
+  jobId,
+  redirectTo,
+  showLabel = false,
+}: {
+  jobId: string
+  redirectTo?: string
+  showLabel?: boolean
+}) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -46,7 +54,11 @@ export function DeleteJobDialog({ jobId }: { jobId: string }) {
         type: "success",
       })
       setOpen(false)
-      router.refresh()
+      if (redirectTo) {
+        router.push(redirectTo)
+      } else {
+        router.refresh()
+      }
     } catch (error) {
       console.error("Failed to delete job", error)
       toast.add({
@@ -63,8 +75,13 @@ export function DeleteJobDialog({ jobId }: { jobId: string }) {
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger
         render={
-          <Button variant="ghost" className="text-red-500">
+          <Button
+            variant="ghost"
+            className="gap-2 text-red-500"
+            aria-label="Delete job"
+          >
             <Trash2Icon />
+            {showLabel && "Delete"}
           </Button>
         }
       />

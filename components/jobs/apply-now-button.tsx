@@ -2,7 +2,7 @@
 
 import { toast } from "@/components/ui/toast"
 import { applyToJob } from "@/lib/actions/applications"
-import { getAppliocationsCount } from "@/lib/api/applications"
+import { getApplicationsCount } from "@/lib/api/applications"
 import { getUserPremiumById } from "@/lib/api/users"
 import { useSession } from "@/lib/auth-client"
 import type { JobApplicationData } from "@/lib/types/applications"
@@ -27,7 +27,7 @@ export function ApplyNowButton({
     } else if (user.role === "seeker") {
       const premiumResult = await getUserPremiumById(user.id)
 
-      const countResult = await getAppliocationsCount(`applicantId=${user.id}`)
+      const countResult = await getApplicationsCount(`applicantId=${user.id}`)
 
       if (!premiumResult.premium && countResult.count >= 5) {
         router.push(`/payment`)

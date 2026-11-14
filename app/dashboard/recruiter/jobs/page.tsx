@@ -1,9 +1,9 @@
 import Link from "next/link"
-import { Plus, MoreVertical, Edit2, MapPinCheck } from "lucide-react"
+import { Plus, MapPinCheck, Eye } from "lucide-react"
 import { BsPeople } from "react-icons/bs"
 
 import { getJobs } from "@/lib/api/jobs"
-import { DeleteJobDialog } from "@/components/jobs/deletejobdialog"
+
 import {
   JobStatusBadge,
   JobTableCell,
@@ -88,7 +88,7 @@ const manageJobsPage = async () => {
                 <JobTableHeader>Status</JobTableHeader>
                 <JobTableHeader>Applicants</JobTableHeader>
                 <JobTableHeader>Deadline</JobTableHeader>
-                <JobTableHeader>Actions</JobTableHeader>
+                <JobTableHeader>View</JobTableHeader>
               </tr>
             </thead>
             <tbody>
@@ -167,13 +167,15 @@ const manageJobsPage = async () => {
                     {/* actions */}
                     <JobTableCell>
                       <div className="flex items-center gap-1">
-                        <button className="inline-flex h-8 items-center gap-1 rounded-lg bg-violet-600/20 px-3 text-xs font-medium text-white transition-colors hover:bg-violet-500">
-                          <Edit2 size={15} />
-                        </button>
-                        <DeleteJobDialog jobId={job._id} />
-                        <button className="inline-flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted">
-                          <MoreVertical className="size-4" />
-                        </button>
+                        <Link
+                          href={`/dashboard/recruiter/jobs/${job._id}`}
+                          aria-label={`Edit ${job.jobTitle}`}
+                          title="Edit job"
+                          className="inline-flex h-8 items-center gap-1 rounded-lg bg-violet-600/20 px-3 text-xs font-medium text-violet-700 transition-colors hover:bg-violet-500 hover:text-white dark:text-violet-300"
+                        >
+                          <Eye size={15} />
+                        </Link>
+                        {/* <DeleteJobDialog jobId={job._id} /> */}
                       </div>
                     </JobTableCell>
                   </tr>

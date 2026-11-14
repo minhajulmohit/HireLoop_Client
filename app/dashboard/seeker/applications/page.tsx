@@ -1,4 +1,4 @@
-import { getAppliocations } from "@/lib/api/applications"
+import { getApplications } from "@/lib/api/applications"
 import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
 import type { ApplicationStatus } from "@/lib/types/applications"
@@ -49,7 +49,7 @@ export default async function ApplicationsPage() {
     headers: await headers(),
   })
 
-  const applications = await getAppliocations(`applicantId=${session?.user.id}`)
+  const applications = await getApplications(`applicantId=${session?.user.id}`)
 
   const shortlisted = applications.filter(
     (application) => application.status === "Shortlisted"
