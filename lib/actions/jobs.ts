@@ -6,17 +6,15 @@ const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"
 export type { JobFormData } from "@/lib/types/jobs"
 
 export const createJob = async (jobData: JobFormData) => {
-  const res = await protectionMutation(
+  return protectionMutation(
     `${baseUrl}/jobs`,
     "POST",
     JSON.stringify(jobData)
   )
-  return res.json()
 }
 
 export const deleteJob = async (jobId: string) => {
-  const res = await protectionMutation(`${baseUrl}/jobs/${jobId}`, "DELETE")
-  return res.json()
+  return protectionMutation(`${baseUrl}/jobs/${jobId}`, "DELETE")
 }
 
 export const updateJob = async (jobId: string, jobData: JobFormData) => {

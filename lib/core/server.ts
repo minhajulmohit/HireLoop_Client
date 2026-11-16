@@ -26,6 +26,10 @@ export const authFetch = async (api: string) => {
   return res
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value)
+}
+
 export const protectionMutation = async (
   api: string,
   method: string,
@@ -44,7 +48,34 @@ export const protectionMutation = async (
     redirect("/unauthorized")
   }
 
-  return res
+  const responseText = await res.text()
+  let responseData: unknown = {}
+
+  if (responseText) {
+    try {
+      responseData = JSON.parse(responseText)
+    } catch {
+      if (!res.ok) {
+        throw new Error(responseText || `Request failed (${res.status})`)
+      }
+      throw new Error("The server returned an invalid response.")
+    }
+  }
+
+  if (!res.ok) {
+    const message =
+      isRecord(responseData) &&
+      typeof responseData.message === "string"
+        ? responseData.message
+        : `Request failed (${res.status})`
+    throw new Error(message)
+  }
+
+  if (!isRecord(responseData)) {
+    throw new Error("The server returned an invalid response.")
+  }
+
+  return responseData
 }
 
 export const requireRole = async (role: string) => {

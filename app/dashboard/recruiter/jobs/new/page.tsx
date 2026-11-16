@@ -61,18 +61,25 @@ export default function AddJobsPage() {
       recruiterId: session?.user.id ?? ("" as string),
     }
 
-    const result = await createJob(jobData)
+    try {
+      const result = await createJob(jobData)
 
-    if (result?.message) {
+      if (typeof result.message !== "string") {
+        throw new Error("The server did not confirm that the job was posted.")
+      }
+
       toast.add({ title: result.message, type: "success" })
       setSubmitted(true)
       form.reset()
       setTimeout(() => {
         router.push("/dashboard/recruiter/jobs")
       }, 1000)
-    } else {
+    } catch (error) {
+      console.error("Failed to post job", error)
       toast.add({
-        title: "Something went wrong while posting the job. Please try again.",
+        title: "Couldn't post the job",
+        description:
+          error instanceof Error ? error.message : "Please try again.",
         type: "error",
       })
     }

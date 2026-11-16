@@ -30,10 +30,29 @@ export const auth = betterAuth({
     additionalFields: {
       role: {
         type: "string",
+        input: false,
+        defaultValue: "seeker",
+      },
+      accountType: {
+        type: "string",
         input: true,
         defaultValue: "seeker",
-        enum: ["seeker", "recruiter", "admin"],
-      }, // allowed: seeker, recruiter, admin
+      },
+    },
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user, context) => {
+          if (context?.path !== "/sign-up/email") return
+
+          return {
+            data: {
+              role: user.accountType === "recruiter" ? "recruiter" : "seeker",
+            },
+          }
+        },
+      },
     },
   },
 

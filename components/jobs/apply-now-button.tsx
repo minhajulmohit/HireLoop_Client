@@ -49,13 +49,23 @@ export function ApplyNowButton({
           status: "Applied",
           applyDate: new Date(),
         }
-        const result = await applyToJob(application)
-        if (result.insertedId) {
+        try {
+          const result = await applyToJob(application)
+          if (result.insertedId) {
+            toast.add({
+              title: "Applied to the job successfully!",
+              type: "success",
+            })
+            router.push("/browse-jobs")
+          }
+        } catch (error) {
+          console.error("Failed to apply to job", error)
           toast.add({
-            title: "Applied to the job successfully!",
-            type: "success",
+            title: "Couldn't apply to the job",
+            description:
+              error instanceof Error ? error.message : "Please try again.",
+            type: "error",
           })
-          router.push("/browse-jobs")
         }
       }
     } else {

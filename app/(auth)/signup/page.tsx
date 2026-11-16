@@ -6,11 +6,11 @@ import { authClient } from "@/lib/auth-client"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { FcGoogle } from "react-icons/fc"
 
-import { FaUsersRays, FaUserShield } from "react-icons/fa6"
+import { FaUsersRays } from "react-icons/fa6"
 import { ImUserTie } from "react-icons/im"
 
 const inputClasses =
@@ -21,7 +21,8 @@ type SignUpFormData = {
   name: string
   email: string
   password: string
-  role: string
+  accountType: string
+  image?: string
 }
 
 export default function SignUpPage() {
@@ -30,6 +31,14 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [role, setRole] = useState("")
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [imageUrl, setImageUrl] = useState("")
+
+  useEffect(() => {
+    return () => {
+      if (imagePreview) URL.revokeObjectURL(imagePreview)
+    }
+  }, [imagePreview])
 
   const roles = [
     {
@@ -42,11 +51,6 @@ export default function SignUpPage() {
       label: "Recruiter",
       icon: <ImUserTie className="h-5 w-5" />,
     },
-    {
-      value: "admin",
-      label: "Admin",
-      icon: <FaUserShield className="h-5 w-5" />,
-    },
   ]
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -56,7 +60,8 @@ export default function SignUpPage() {
       name: name,
       email: email,
       password: password,
-      role: role,
+      accountType: role,
+      image: imageUrl || undefined,
     }
 
     const { data, error } = await authClient.signUp.email(formData)
@@ -72,6 +77,22 @@ export default function SignUpPage() {
         type: "error",
       })
     }
+  }
+
+  async function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    setImagePreview(URL.createObjectURL(file))
+
+    const formData = new FormData()
+    formData.append("image", file)
+
+    const imagebbAPI = `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMAGEBB_API_KEY}`
+
+    const res = await fetch(imagebbAPI, { method: "POST", body: formData })
+    const result = await res.json()
+    setImageUrl(result.data.url)
   }
 
   function handleGoogleSignUp() {
@@ -97,12 +118,39 @@ export default function SignUpPage() {
         </h1>
 
         <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4">
+          <div className="flex flex-col items-center gap-3">
+            <label
+              htmlFor="profile-image"
+              className="relative flex size-24 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-white/15 bg-white/5 text-xs text-white/60 transition-colors hover:bg-white/10"
+            >
+              {imagePreview ? (
+                <Image
+                  src={imagePreview}
+                  alt="Selected profile picture"
+                  fill
+                  unoptimized
+                  className="object-cover"
+                />
+              ) : (
+                <span>Upload photo</span>
+              )}
+            </label>
+            <input
+              id="profile-image"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="sr-only"
+            />
+            <p className="text-xs text-white/40">Profile picture (optional)</p>
+          </div>
+
           {/* Role selector — ekta select korte hobe */}
           <div className="flex flex-col gap-1.5">
             <span className="text-xs font-medium text-white/60">
               I want to join as
             </span>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {roles.map((r) => (
                 <label key={r.value} className="cursor-pointer">
                   <input

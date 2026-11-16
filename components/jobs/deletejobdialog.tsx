@@ -42,7 +42,8 @@ export function DeleteJobDialog({
       if (!res?.deletedCount) {
         toast.add({
           title: "Couldn't delete job",
-          description: res?.message ?? "Please try again.",
+          description:
+            typeof res?.message === "string" ? res.message : "Please try again.",
           type: "error",
         })
         return

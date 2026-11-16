@@ -77,7 +77,10 @@ export function SiteNavbar() {
 
             {session?.user ? (
               <>
-                <span>Welcome {session?.user.name}! </span>
+                <UserAvatar
+                  name={session.user.name}
+                  image={session.user.image}
+                />
                 <Button
                   size="lg"
                   onClick={handleSignOut}
@@ -145,7 +148,10 @@ export function SiteNavbar() {
 
               {session?.user ? (
                 <>
-                  <span>Welcome {session?.user.name}</span>
+                  <UserAvatar
+                    name={session.user.name}
+                    image={session.user.image}
+                  />
                   <Button
                     size="lg"
                     onClick={handleSignOut}
@@ -179,6 +185,33 @@ export function SiteNavbar() {
         )}
       </div>
     </header>
+  )
+}
+
+function UserAvatar({
+  name,
+  image,
+}: {
+  name: string
+  image?: string | null
+}) {
+  return (
+    <div
+      aria-label={`${name}'s profile`}
+      className="relative flex size-10 items-center justify-center overflow-hidden rounded-full bg-violet-500 font-semibold text-white"
+    >
+      {image ? (
+        <Image
+          src={image}
+          alt={`${name}'s profile`}
+          fill
+          unoptimized
+          className="object-cover"
+        />
+      ) : (
+        <span>{name.trim().charAt(0).toUpperCase() || "?"}</span>
+      )}
+    </div>
   )
 }
 
