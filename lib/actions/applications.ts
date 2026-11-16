@@ -1,16 +1,17 @@
-import type { ApplicationStatus, JobApplicationData } from "@/lib/types/applications"
+import type {
+  ApplicationStatus,
+  JobApplicationData,
+} from "@/lib/types/applications"
+import { protectionMutation } from "../core/server"
 
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"
 
 export async function applyToJob(data: JobApplicationData) {
-  const response = await fetch(`${baseUrl}/applications`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-  return response.json()
+  const api = `${baseUrl}/applications`
+
+  const res = await protectionMutation(api, "POST", JSON.stringify(data))
+
+  return res.json()
 }
 
 export const updateApplicationsStatus = async (
@@ -25,7 +26,9 @@ export const updateApplicationsStatus = async (
 
   if (!response.ok) {
     const message = await response.text()
-    throw new Error(message || `Failed to update application (${response.status})`)
+    throw new Error(
+      message || `Failed to update application (${response.status})`
+    )
   }
 
   return response.json()

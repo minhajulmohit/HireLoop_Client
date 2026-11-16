@@ -50,7 +50,6 @@ export function ApplyNowButton({
           applyDate: new Date(),
         }
         const result = await applyToJob(application)
-
         if (result.insertedId) {
           toast.add({
             title: "Applied to the job successfully!",
