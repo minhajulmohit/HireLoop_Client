@@ -21,7 +21,7 @@ type SignUpFormData = {
   name: string
   email: string
   password: string
-  accountType: string
+  role: string
   image?: string
 }
 
@@ -60,7 +60,7 @@ export default function SignUpPage() {
       name: name,
       email: email,
       password: password,
-      accountType: role,
+      role: role,
       image: imageUrl || undefined,
     }
 
